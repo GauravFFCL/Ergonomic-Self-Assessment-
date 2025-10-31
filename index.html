@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ergonomic Self-Assessment</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for Inter font and professional colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Brand Colors (Optimized for Prosper Health & Rehab's green theme)
+                        'primary': '#047857', // Deep Emerald Green (used for CTAs, borders, emphasis)
+                        'secondary': '#374151', // Dark grey (used for text and headings)
+                        'danger': '#b91c1c', // Adjusted Red for High Risk
+                        'safe': '#059669', // Medium Green (used for Low Risk results)
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for better visual separation and hover effects */
+        .question-card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+        .question-card:hover {
+            transform: translateY(-2px);
+        }
+        .answer-button {
+            transition: all 0.15s;
+            cursor: pointer;
+            user-select: none;
+        }
+        .answer-button:hover {
+            opacity: 0.9;
+        }
+        /* Update selected button colors to use the 'safe' green, which is slightly brighter */
+        .answer-button.selected {
+            border-color: var(--primary-color, '#047857');
+            background-color: #ecfdf5; /* Light green background */
+            box-shadow: 0 0 0 3px #05966940; /* Box shadow matches the 'safe' color */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8">
+
+    <div id="assessment-container" class="w-full max-w-4xl bg-white rounded-xl shadow-2xl p-6 sm:p-10">
+
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-primary mb-2">
+                Ergonomics Self-Assessment
+            </h1>
+            <p class="text-lg text-secondary">
+                Preliminary risk evaluation for work-related discomfort.
+            </p>
+            <p class="text-sm text-gray-500 mt-2">
+                Brought to you by Prosper Health and Rehabilitation & Fresh Frontiers Consultancy Ltd.
+            </p>
+        </header>
+
+        <!-- Question List -->
+        <div id="questions-list" class="space-y-6">
+            <!-- Questions will be injected here by JavaScript for structure -->
+        </div>
+
+        <!-- Submission Button -->
+        <div class="mt-10 text-center">
+            <button id="submit-button" class="w-full sm:w-auto px-10 py-4 bg-primary text-white font-bold text-xl rounded-lg hover:bg-green-700 transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-primary focus:ring-opacity-50">
+                Calculate My Risk Score
+            </button>
+            <p id="error-message" class="text-danger mt-3 hidden">
+                ⚠️ Please answer all 6 questions before calculating your score.
+            </p>
+        </div>
+
+        <!-- Results Section (Initially Hidden) -->
+        <div id="results-section" class="mt-12 p-6 sm:p-8 bg-gray-100 rounded-xl border-t-4 border-primary hidden">
+            
+            <!-- NEW DISCLAIMER SECTION -->
+            <div id="disclaimer" class="mb-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded-lg">
+                <p class="font-bold text-lg mb-1">Disclaimer</p>
+                <p class="text-sm">
+                    This self-assessment tool provides a preliminary indication of potential ergonomic risks based on your answers. **It is not a diagnostic tool and does not replace the professional judgment of a healthcare provider.** For an accurate diagnosis, personalized recommendations, and a detailed ergonomic setup plan, an **expert assessment by a qualified physiotherapist or ergonomist is required.**
+                </p>
+            </div>
+            <!-- END DISCLAIMER -->
+
+            <h2 class="text-2xl font-bold text-secondary mb-4 text-center">Your Assessment Results</h2>
+
+            <div id="result-content">
+                <!-- Result content will be injected here (Title, Rationale, CTA) -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global data based on the provided logic (Rationale properties have been removed for a clean client-facing script)
+        const ASSESSMENT_DATA = [
+            { id: 'Q1', question: 'Do you feel pain, stiffness, or numbness (in your neck, shoulders, wrists, or back) that develops or worsens while you are working?' },
+            { id: 'Q2', question: 'Do you often shift positions or feel restless because you cannot get physically comfortable at your desk or workstation?' },
+            { id: 'Q3', question: 'Do you find yourself leaning in, slouching, straining your neck etc. to see your computer screen or work materials?' },
+            { id: 'Q4', question: 'Are you using a laptop, tablet, or phone as your primary work tool for more than 2 hours a day without external accessories?' },
+            { id: 'Q5', question: 'Have you been diagnosed with or treated for a repetitive strain injury (RSI), such as Carpal Tunnel Syndrome, Lower Back Pain etc. in the past year?' },
+            { id: 'Q6', question: 'Does physical discomfort related to your work interfere with your sleep or your ability to relax once you are away from your workstation?' },
+        ];
+
+        // Scoring Logic: Yes = 1 point, No = 0 points
+        const CRITICAL_THRESHOLD = 2; // Score of 2 or more is High Priority
+
+        const RESULTS_TIERS = {
+            LOW: {
+                title: 'Recommended Action: Practice Ergonomic Awareness 👍',
+                color: 'safe',
+                rationale: 'You have minimal to no reported discomfort directly linked to work. Continue to practice good vigilance and preventative knowledge.',
+                ctaText: 'Read Our Wellness Tips',
+                // Link to Prosper Health's resources/blog
+                ctaLink: 'https://prosperhealth.ca/'
+            },
+            HIGH: {
+                title: 'Recommended Action: Seek Expert Assessment ⚠️',
+                color: 'danger',
+                rationale: 'Two or more "Yes" answers indicate a strong, likely clinical link between your workstation/habits and physical discomfort. This prioritizes immediate consultation due to active symptoms or known risk factors.',
+                ctaText: 'Schedule Your Consultation Now',
+                // Direct link to Prosper Health's contact/booking page
+                ctaLink: 'https://prosperhealth.ca/contact'
+            }
+        };
+
+        const questionsList = document.getElementById('questions-list');
+        const submitButton = document.getElementById('submit-button');
+        const errorMessage = document.getElementById('error-message');
+        const resultsSection = document.getElementById('results-section');
+        const resultContent = document.getElementById('result-content');
+
+        /**
+         * Generates the HTML structure for a single question.
+         */
+        function renderQuestion(data) {
+            return `
+                <div id="card-${data.id}" class="question-card bg-white p-5 rounded-lg border-l-4 border-primary/50">
+                    <p class="text-base sm:text-lg font-semibold text-secondary mb-3">
+                        ${data.id}. ${data.question}
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                        <button
+                            data-q="${data.id}"
+                            data-value="1"
+                            class="answer-button w-full sm:w-1/2 p-3 border-2 border-gray-300 rounded-lg text-lg font-medium text-secondary hover:border-primary/80"
+                        >
+                            Yes
+                        </button>
+                        <button
+                            data-q="${data.id}"
+                            data-value="0"
+                            class="answer-button w-full sm:w-1/2 p-3 border-2 border-gray-300 rounded-lg text-lg font-medium text-secondary hover:border-primary/80"
+                        >
+                            No
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Renders all questions and attaches event listeners.
+         */
+        function initializeAssessment() {
+            // Render all questions
+            questionsList.innerHTML = ASSESSMENT_DATA.map(renderQuestion).join('');
+
+            // Attach event listeners to answer buttons
+            document.querySelectorAll('.answer-button').forEach(button => {
+                button.addEventListener('click', handleAnswerClick);
+            });
+
+            // Attach event listener to submission button
+            submitButton.addEventListener('click', calculateScore);
+        }
+
+        /**
+         * Handles the selection of a Yes/No answer.
+         */
+        function handleAnswerClick(event) {
+            const clickedButton = event.target;
+            const questionId = clickedButton.getAttribute('data-q');
+            const cardElement = document.getElementById(`card-${questionId}`);
+
+            // Find all buttons in the same question group/card
+            const siblings = cardElement.querySelectorAll('.answer-button');
+
+            // Deselect all siblings and select the current button
+            siblings.forEach(btn => btn.classList.remove('selected'));
+            clickedButton.classList.add('selected');
+
+            // Hide error message if all answers are selected
+            if (document.querySelectorAll('.answer-button.selected').length === ASSESSMENT_DATA.length) {
+                errorMessage.classList.add('hidden');
+            }
+
+            // Hide results section if user changes an answer
+            resultsSection.classList.add('hidden');
+        }
+
+        /**
+         * Calculates the final score and displays the results.
+         */
+        function calculateScore() {
+            // Get all selected buttons
+            const selectedButtons = document.querySelectorAll('.answer-button.selected');
+            
+            // Check if all 6 questions were answered
+            if (selectedButtons.length < ASSESSMENT_DATA.length) {
+                errorMessage.classList.remove('hidden');
+                resultsSection.classList.add('hidden');
+                // Scroll to the error message for mobile visibility
+                errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            } else {
+                errorMessage.classList.add('hidden');
+            }
+            
+            let totalScore = 0;
+            selectedButtons.forEach(button => {
+                const value = parseInt(button.getAttribute('data-value'), 10);
+                totalScore += value;
+            });
+
+            // Determine the result tier
+            const result = totalScore >= CRITICAL_THRESHOLD ? RESULTS_TIERS.HIGH : RESULTS_TIERS.LOW;
+
+            // Render results
+            renderResults(totalScore, result);
+        }
+
+        /**
+         * Renders the final result to the results section.
+         */
+        function renderResults(score, resultData) {
+            // NOTE: Disclaimer is static HTML above this content
+            const resultHTML = `
+                <div class="text-center">
+                    <p class="text-xl font-medium text-secondary mb-4">
+                        Your Total Score: <span class="text-3xl font-extrabold text-${resultData.color}">${score} / 6</span>
+                    </p>
+                    <h3 class="text-3xl font-extrabold mb-4 text-${resultData.color}">
+                        ${resultData.title}
+                    </h3>
+
+                    <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+                        ${resultData.rationale}
+                    </p>
+
+                    <!-- Call-to-Action Button -->
+                    <a href="${resultData.ctaLink}" target="_blank" rel="noopener noreferrer" class="inline-block px-8 py-3 bg-${resultData.color} text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl hover:opacity-90 transition duration-300 focus:outline-none focus:ring-4 focus:ring-${resultData.color}/50 mt-4">
+                        ${resultData.ctaText}
+                    </a>
+                    <p class="text-xs text-gray-400 mt-2">Opens in a new window.</p>
+                </div>
+            `;
+            
+            resultContent.innerHTML = resultHTML;
+            resultsSection.classList.remove('hidden');
+
+            // Scroll the results section into view for immediate feedback
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Initialize the app when the window loads
+        window.onload = initializeAssessment;
+
+    </script>
+</body>
+</html>
