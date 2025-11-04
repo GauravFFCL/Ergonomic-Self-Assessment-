@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ergonomic Self-Assessment</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configure Tailwind for Inter font and professional colors -->
-    <script>
+    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for Inter font and professional colors --><script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -54,8 +52,7 @@
 
     <div id="assessment-container" class="w-full max-w-4xl bg-white rounded-xl shadow-2xl p-6 sm:p-10">
 
-        <!-- Header -->
-        <header class="text-center mb-10">
+        <!-- Header --><header class="text-center mb-10">
             <h1 class="text-3xl sm:text-4xl font-extrabold text-primary mb-2">
                 Ergonomics Self-Assessment
             </h1>
@@ -67,13 +64,10 @@
             </p>
         </header>
 
-        <!-- Question List -->
-        <div id="questions-list" class="space-y-6">
-            <!-- Questions will be injected here by JavaScript for structure -->
-        </div>
+        <!-- Question List --><div id="questions-list" class="space-y-6">
+            <!-- Questions will be injected here by JavaScript for structure --></div>
 
-        <!-- Submission Button -->
-        <div class="mt-10 text-center">
+        <!-- Submission Button --><div class="mt-10 text-center">
             <button id="submit-button" class="w-full sm:w-auto px-10 py-4 bg-primary text-white font-bold text-xl rounded-lg hover:bg-[#001f3e] transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-primary focus:ring-opacity-50">
                 Calculate My Risk Score
             </button>
@@ -82,23 +76,18 @@
             </p>
         </div>
 
-        <!-- Results Section (Initially Hidden) -->
-        <div id="results-section" class="mt-12 p-6 sm:p-8 bg-gray-100 rounded-xl border-t-4 border-primary hidden">
+        <!-- Results Section (Initially Hidden) --><div id="results-section" class="mt-12 p-6 sm:p-8 bg-gray-100 rounded-xl border-t-4 border-primary hidden">
             
-            <!-- NEW DISCLAIMER SECTION -->
-            <div id="disclaimer" class="mb-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded-lg">
+            <!-- NEW DISCLAIMER SECTION --><div id="disclaimer" class="mb-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded-lg">
                 <p class="font-bold text-lg mb-1">Disclaimer</p>
                 <p class="text-sm">
-                    This self-assessment tool provides a preliminary indication of potential ergonomic risks based on your answers. **It is not a diagnostic tool and does not replace the professional judgment of a healthcare provider.** For an accurate diagnosis, personalized recommendations, and a detailed ergonomic setup plan, an **expert assessment by a qualified physiotherapist or ergonomist is required.**
+                    This self-assessment tool provides a preliminary indication of potential ergonomic risks based on your answers. **It is not a diagnostic tool and does not replace the professional judgment of a healthcare provider.** For an accurate diagnosis, personalized recommendations, and a detailed ergonomic setup plan, an **expert assessment by a qualified professional is required.**
                 </p>
             </div>
-            <!-- END DISCLAIMER -->
-
-            <h2 class="text-2xl font-bold text-secondary mb-4 text-center">Your Assessment Results</h2>
+            <!-- END DISCLAIMER --><h2 class="text-2xl font-bold text-secondary mb-4 text-center">Your Assessment Results</h2>
 
             <div id="result-content">
-                <!-- Result content will be injected here (Title, Rationale, CTA) -->
-            </div>
+                <!-- Result content will be injected here (Title, Rationale, CTA) --></div>
         </div>
     </div>
 
@@ -259,8 +248,7 @@
                         ${resultData.rationale}
                     </p>
 
-                    <!-- Call-to-Action Button -->
-                    <a href="${resultData.ctaLink}" target="_blank" rel="noopener noreferrer" class="inline-block px-8 py-3 bg-${resultData.color} text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl hover:opacity-90 transition duration-300 focus:outline-none focus:ring-4 focus:ring-${resultData.color}/50 mt-4">
+                    <!-- Call-to-Action Button --><a href="${resultData.ctaLink}" target="_blank" rel="noopener noreferrer" class="inline-block px-8 py-3 bg-${resultData.color} text-white font-bold text-lg rounded-full shadow-lg hover:shadow-xl hover:opacity-90 transition duration-300 focus:outline-none focus:ring-4 focus:ring-${resultData.color}/50 mt-4">
                         ${resultData.ctaText}
                     </a>
                     <p class="text-xs text-gray-400 mt-2">Opens in a new window.</p>
