@@ -12,11 +12,11 @@
             theme: {
                 extend: {
                     colors: {
-                        // Brand Colors (Optimized for Prosper Health & Rehab's green theme)
-                        'primary': '#047857', // Deep Emerald Green (used for CTAs, borders, emphasis)
+                        // Brand Colors (Updated to the requested dark blue: #012e55)
+                        'primary': '#012e55', // Dark Blue (used for CTAs, borders, emphasis)
                         'secondary': '#374151', // Dark grey (used for text and headings)
                         'danger': '#b91c1c', // Adjusted Red for High Risk
-                        'safe': '#059669', // Medium Green (used for Low Risk results)
+                        'safe': '#059669', // Medium Green (used for Low Risk results - kept for contrast/positive status)
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -42,11 +42,11 @@
         .answer-button:hover {
             opacity: 0.9;
         }
-        /* Update selected button colors to use the 'safe' green, which is slightly brighter */
+        /* Update selected button colors to use the new primary color for borders/shadows */
         .answer-button.selected {
-            border-color: var(--primary-color, '#047857');
-            background-color: #ecfdf5; /* Light green background */
-            box-shadow: 0 0 0 3px #05966940; /* Box shadow matches the 'safe' color */
+            border-color: #012e55; /* New primary brand color */
+            background-color: #ecfdf5; /* Light green background (for highlight) */
+            box-shadow: 0 0 0 3px #012e5540; /* Use primary color for shadow */
         }
     </style>
 </head>
@@ -74,7 +74,7 @@
 
         <!-- Submission Button -->
         <div class="mt-10 text-center">
-            <button id="submit-button" class="w-full sm:w-auto px-10 py-4 bg-primary text-white font-bold text-xl rounded-lg hover:bg-green-700 transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-primary focus:ring-opacity-50">
+            <button id="submit-button" class="w-full sm:w-auto px-10 py-4 bg-primary text-white font-bold text-xl rounded-lg hover:bg-[#001f3e] transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-primary focus:ring-opacity-50">
                 Calculate My Risk Score
             </button>
             <p id="error-message" class="text-danger mt-3 hidden">
